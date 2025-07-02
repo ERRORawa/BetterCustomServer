@@ -61,12 +61,12 @@ namespace REPOCrack
         }
         public static string EncryptionECB(string encryString)
         {
-		return "make it yourself";
+            return "make it yourself";
         }
 
         public static string[] DecryptionECB(string decryString)
         {
-		return "make it yourself";
+            return "make it yourself";
         }
 
         public static string AppIdRealtime = "none";
@@ -405,9 +405,9 @@ namespace REPOCrack
         [HarmonyPatch("ButtonEventPlayRandom")]
         public static bool ButtonEventPlayRandomPatch()
         {   //覆写公共大厅功能
-            REPOCrack.Log.LogWarning("公共大厅功能未开发！");
+            REPOCrack.Log.LogWarning("Not Support Public Game!");
             MenuManager.instance.PageCloseAll();
-            MenuManager.instance.PagePopUp("别看了", UnityEngine.Color.yellow, "公共大厅功能没做", "好的", true);
+            MenuManager.instance.PagePopUp("Sorry", UnityEngine.Color.yellow, "I don't make this", "OK", true);
             return false;
         }
 
@@ -430,22 +430,22 @@ namespace REPOCrack
                     catch
                     {
                         REPOCrack.inviteCode[0] = "false";
-                        REPOCrack.inviteCode[1] = "邀请码已过期";
-                        REPOCrack.inviteCode[2] = "超时啦！";
+                        REPOCrack.inviteCode[1] = "The InviteCode has timed out.";
+                        REPOCrack.inviteCode[2] = "Please recopy an InviteCode";
                     }
                 }
                 else
                 {
                     REPOCrack.inviteCode[0] = "false";
-                    REPOCrack.inviteCode[1] = "未识别到邀请码";
-                    REPOCrack.inviteCode[2] = "笨比，你码呢？";
+                    REPOCrack.inviteCode[1] = "InviteCode not found.";
+                    REPOCrack.inviteCode[2] = "Where is your InviteCode?";
                 }
             }
             catch
             {
                 REPOCrack.inviteCode[0] = "false";
-                REPOCrack.inviteCode[1] = "未识别到邀请码";
-                REPOCrack.inviteCode[2] = "诶？你剪贴板怎么是空的";
+                REPOCrack.inviteCode[1] = "InviteCode not found.";
+                REPOCrack.inviteCode[2] = "Why is your clipboard empty?";
             }
             ulong lobbyId;
             if (REPOCrack.inviteCode[0] == "true" && ulong.TryParse(REPOCrack.inviteCode[2], out lobbyId))
@@ -460,7 +460,7 @@ namespace REPOCrack
             else
             {   //邀请码解密失败
                 REPOCrack.Log.LogError("加入房间失败！");
-                MenuManager.instance.PagePopUp("错误", UnityEngine.Color.red , REPOCrack.inviteCode[1], REPOCrack.inviteCode[2], true);
+                MenuManager.instance.PagePopUp("ERROR", UnityEngine.Color.red , REPOCrack.inviteCode[1], REPOCrack.inviteCode[2], true);
             }
             return false;
         }
