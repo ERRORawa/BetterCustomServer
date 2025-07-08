@@ -24,7 +24,7 @@ using Microsoft.SqlServer.Server;
 
 namespace BetterCustomServer
 {
-    [BepInPlugin("errorawa.repo.customserver", "BetterCustomServer", "0.2.0")]
+    [BepInPlugin("errorawa.repo.customserver", "BetterCustomServer", "0.2.1")]
     public class BetterCustomServer : BaseUnityPlugin
     {
         void Awake()
@@ -37,7 +37,7 @@ namespace BetterCustomServer
             BepInEx.Logging.Logger.Sources.Add(Log);
             this.Bind();
             harmony.PatchAll();
-            BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Message, "Loaded BetterCustomServer mod");
+            BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Message, BetterCustomServer.language.Value == "ZH" ? "BetterCustomServer 加载完毕" : "Loaded BetterCustomServer mod");
         }
 
         void Bind()
@@ -46,7 +46,8 @@ namespace BetterCustomServer
             isChinaServerConfig = Config.Bind<bool>("Server", "Use China Server", false, "If enable this option, Region will only work on Voice Server.");
             useVoice = Config.Bind<bool>("Server", "Use Voice Server", true, "If disable this option, the lobby will not support voice chat.");
             playerCount = Config.Bind<int>("Server", "Max Player Count", 8, new ConfigDescription("Change max player count.", new AcceptableValueRange<int>(2, 20)));
-            enableLog = Config.Bind<bool>("Logger", "Log Output", true, "Enable log output");
+            language = Config.Bind<string>("Debug", "Language", "EN", new ConfigDescription("Select mod language", new AcceptableValueList<string>("EN", "ZH")));
+            enableLog = Config.Bind<bool>("Debug", "Log Output", true, "Enable log output");
 
         }
 
@@ -77,21 +78,21 @@ namespace BetterCustomServer
             bool findServer = false;
             if (File.Exists("C:\\PhotonPunGlobal.txt"))
             {
-                BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Info, "Found Game Server (Global)");
+                BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Info, BetterCustomServer.language.Value == "ZH" ? "找到游戏服务器（国际区）" : "Found Game Server (Global)");
                 BetterCustomServer.AppIdRealtime = File.ReadAllText("C:\\PhotonPunGlobal.txt");
                 isChinaServer = false;
                 findServer = true;
             }
             if (File.Exists("C:\\PhotonPunChina.txt") && BetterCustomServer.isChinaServerConfig.Value)
             {
-                BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Info, "Found Game Server (China)");
+                BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Info, BetterCustomServer.language.Value == "ZH" ? "找到游戏服务器（中国区）" : "Found Game Server (China)");
                 BetterCustomServer.AppIdRealtime = File.ReadAllText("C:\\PhotonPunChina.txt");
                 isChinaServer = true;
                 findServer = true;
             }
             else if(findServer && BetterCustomServer.isChinaServerConfig.Value)
             {
-                BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Warning, "China Server not found, but you can still use Global Server to create lobby.");
+                BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Warning, BetterCustomServer.language.Value == "ZH" ? "未找到中国区服务器，但你依旧可以使用国际区服务器创建大厅" : "China Server not found, but you can still use Global Server to create lobby.");
             }
             if(!findServer && BetterCustomServer.AppIdRealtime == "none")
             {
@@ -101,17 +102,17 @@ namespace BetterCustomServer
             {
                 if (File.Exists("C:\\PhotonVoice.txt"))
                 {
-                    BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Info, "Found Voice Server");
+                    BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Info, BetterCustomServer.language.Value == "ZH" ? "找到语音服务器" : "Found Voice Server");
                     BetterCustomServer.AppIdVoice = File.ReadAllText("C:\\PhotonVoice.txt");
                 }
                 else
                 {
-                    BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Warning, "Voice Server not found, but you can still create lobby.");
+                    BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Warning, BetterCustomServer.language.Value == "ZH" ? "未找到语音服务器，但你依旧可以创建大厅" : "Voice Server not found, but you can still create lobby.");
                 }
             }
             else
             {
-                BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Info, "Voice Server disabled.");
+                BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Info, BetterCustomServer.language.Value == "ZH" ? "已禁用语音服务器" : "Voice Server disabled.");
                 BetterCustomServer.AppIdVoice = "none";
             }
             BetterCustomServer.Region = BetterCustomServer.RegionConfig.Value;
@@ -119,16 +120,16 @@ namespace BetterCustomServer
         }
         public static string EncryptionECB(string encryString)
         {
-            return "do it yourself";
+            "make it your self";
         }
 
         public static string[] DecryptionECB(string decryString)
         {
-            return "do it yourself";
+            "make it your self";
         }
 
         public static void CopyInviteCode()
-        {
+        {   //复制邀请码
             string useChinaServer = "false";
             if (BetterCustomServer.isChinaServer)
             {
@@ -146,7 +147,7 @@ namespace BetterCustomServer
                 "·",
                 BetterCustomServer.Region
             }));
-            BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Info, "Alread copy the InviteCode to clipboard");
+            BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Info, BetterCustomServer.language.Value == "ZH" ? "已将邀请码复制到剪贴板" : "Alread copy the InviteCode to clipboard");
         }
 
         public static ConfigEntry<string> RegionConfig;
@@ -154,6 +155,7 @@ namespace BetterCustomServer
         public static ConfigEntry<bool> useVoice;
         public static ConfigEntry<int> playerCount;
         public static ConfigEntry<bool> enableLog;
+        public static ConfigEntry<string> language;
         public static string AppIdRealtime = "none";
         public static string AppIdVoice = "none";
         public static string Region = "none";
@@ -163,6 +165,7 @@ namespace BetterCustomServer
         public static string[] inviteCode = new string[5];
         public static EnterRoomParams enterRoomParams = new EnterRoomParams();
         public static bool isHost = false;
+        public static bool[] isKicked = new bool[2] { false, false };
         public static bool passwordLog = false;
         public static ManualLogSource Log = new ManualLogSource("BetterCustomServer");
     }
@@ -177,7 +180,7 @@ namespace BetterCustomServer
             if(!BetterCustomServer.isHost)   //加入房间，传入房间ID
             {
                 Traverse.Create(__instance).Field("RoomName").SetValue(BetterCustomServer.RoomName);
-                BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Info, "Joining Lobby: " + Traverse.Create(__instance).Field("RoomName").GetValue<string>());
+                BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Info, (BetterCustomServer.language.Value == "ZH" ? "加入大厅：" : "Joining Lobby: ") + Traverse.Create(__instance).Field("RoomName").GetValue<string>());
             }
         }
 
@@ -201,7 +204,7 @@ namespace BetterCustomServer
                                 {
                                     if (codes[i + 5].opcode == OpCodes.Stfld)
                                     {
-                                        BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Info, "Patch JoinRoomName:" + i.ToString() + "-" + (i + 5).ToString());
+                                        BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Info, (BetterCustomServer.language.Value == "ZH" ? "注入 JoinRoomName：" : "Patch JoinRoomName:") + i.ToString() + "-" + (i + 5).ToString());
                                         index = i + 6;
                                         codes[i].opcode = OpCodes.Nop;    //房员的 RoomName
                                         codes[i + 1].opcode = OpCodes.Nop;
@@ -233,7 +236,7 @@ namespace BetterCustomServer
                                     {
                                         if (codes[i + 6].opcode == OpCodes.Stfld)
                                         {
-                                            BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Info, "Patch JoinRegion: " + i.ToString() + "-" + (i + 6).ToString());
+                                            BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Info, (BetterCustomServer.language.Value == "ZH" ? "注入 JoinRegion：" : "Patch JoinRegion: ") + i.ToString() + "-" + (i + 6).ToString());
                                             index = i + 7;
                                             codes[i].opcode = OpCodes.Nop;    //房员的 FixedRegion
                                             codes[i + 1].opcode = OpCodes.Nop;
@@ -265,7 +268,7 @@ namespace BetterCustomServer
                                 {
                                     if (codes[i + 5].opcode == OpCodes.Brfalse)
                                     {
-                                        BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Info, "Patch RemoveVersionCheck: " + (i + 5).ToString());
+                                        BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Info, (BetterCustomServer.language.Value == "ZH" ? "注入 RemoveVersionCheck：" : "Patch RemoveVersionCheck: ") + (i + 5).ToString());
                                         index = i + 6;
                                         codes[i + 1].opcode = OpCodes.Nop;  //去除版本检查
                                         codes[i + 2].opcode = OpCodes.Nop;
@@ -292,7 +295,7 @@ namespace BetterCustomServer
                             {
                                 if (codes[i + 4].opcode == OpCodes.Stfld)
                                 {
-                                    BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Info, "Patch CreateFixedRegion: " + i.ToString() + "-" + (i + 4).ToString());
+                                    BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Info, (BetterCustomServer.language.Value == "ZH" ? "注入 CreateFixedRegion：" : "Patch CreateFixedRegion: ") + i.ToString() + "-" + (i + 4).ToString());
                                     index = i + 5;
                                     codes[i].opcode = OpCodes.Nop;    //房主的 FixedRegion
                                     codes[i + 1].opcode = OpCodes.Nop;
@@ -312,7 +315,7 @@ namespace BetterCustomServer
                 {
                     if (codes[i + 1].opcode == OpCodes.Callvirt)
                     {
-                        BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Info, "Patch RemoveSteamAuth: " + i.ToString() + "-" + (i + 1).ToString());
+                        BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Info, (BetterCustomServer.language.Value == "ZH" ? "注入 RemoveSteamAuth：" : "Patch RemoveSteamAuth: ") + i.ToString() + "-" + (i + 1).ToString());
                         codes[i].opcode = OpCodes.Nop;    //去除发送Steam认证信息（会导致游戏报错无法创建房间）
                         codes[i + 1].opcode = OpCodes.Nop;
                         break;
@@ -350,7 +353,7 @@ namespace BetterCustomServer
             RoomOptions roomOptions = new RoomOptions
             {
                 MaxPlayers = BetterCustomServer.playerCount.Value,
-                PlayerTtl = 300000,
+                PlayerTtl = 10000,
                 IsVisible = false
             };
             if(BetterCustomServer.isHost)
@@ -379,39 +382,32 @@ namespace BetterCustomServer
             }
         }
 
-        [HarmonyTranspiler]
-        [HarmonyPatch("OnStatusChanged")]
-        public static IEnumerable<CodeInstruction> OnStatusChangedPatch(IEnumerable<CodeInstruction> instructions)
-        {   //移除TimeoutDisconnect执行的内容
-            var codes = instructions.ToList();
-            for(int i = 400; i < codes.Count; i++)
-            {
-                if (codes[i + 6].opcode == OpCodes.Ldstr && codes[i + 18].opcode == OpCodes.Ldc_I4_8)
-                {
-                    if (codes[i + 6].operand.ToString() == "Connection lost. OnStatusChanged to {0}. Client state was: {1}. {2}")
-                    {
-                        BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Info, "Patch OnStatusChanged: " + i.ToString());
-                        codes[i].opcode = OpCodes.Ret;
-                        break;
-                    }
-                }
-            }
-            return codes.AsEnumerable();
-        }
-
         [HarmonyPrefix]
         [HarmonyPatch("OnStatusChanged")]
         public static bool OnStatusChanged(LoadBalancingClient __instance, ref StatusCode statusCode)
         {   //重写语音掉线执行的内容
-            if(statusCode == StatusCode.TimeoutDisconnect)
+            if(statusCode == StatusCode.TimeoutDisconnect || statusCode == StatusCode.DisconnectByServerTimeout)
             {
-                BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Error, "Voice Server connect timeout. Reconnecting");
+                BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Error, BetterCustomServer.language.Value == "ZH" ? "语音服务器连接超时，正在重连" : "Voice Server connect timeout. Reconnecting");
                 __instance.OpJoinOrCreateRoom(BetterCustomServer.enterRoomParams);
                 return false;
             }
             else
             {
                 return true;
+            }
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch("OpLeaveRoom")]
+        public static void OpLeaveRoomPrefix(ref bool becomeInactive, ref bool sendAuthCookie)
+        {   //判断你是否是被房主踢出的
+            if (!becomeInactive && PhotonNetwork.EnableCloseConnection && BetterCustomServer.isKicked[1] == false)
+            {
+                BetterCustomServer.isKicked[0] = true;
+                PhotonNetwork.EnableCloseConnection = false;
+                GameDirector.instance.OutroStart();
+                Traverse.Create(NetworkManager.instance).Field("leavePhotonRoom").SetValue(true);
             }
         }
     }
@@ -423,7 +419,7 @@ namespace BetterCustomServer
         [HarmonyPatch("SendSteamAuthTicket")]
         public static bool SendSteamAuthTicketPatch()
         {   //防止认证类型被更改为Steam（语音服务会无法连接）
-            BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Info, "Remove Steam Auth");
+            BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Info, BetterCustomServer.language.Value == "ZH" ? "移除 Steam 认证" : "Remove Steam Auth");
             PhotonNetwork.AuthValues.AuthType = CustomAuthenticationType.None;
             return false;
         }
@@ -443,7 +439,19 @@ namespace BetterCustomServer
 
     [HarmonyPatch(typeof(MenuPageMain))]
     public class MenuPageMainPatch
-    {   //主界面
+    {
+        [HarmonyPrefix]
+        [HarmonyPatch("Start")]
+        public static void StartPrefix()
+        {   //判断踢出，显示提示
+            if (BetterCustomServer.isKicked[0] == true && BetterCustomServer.isKicked[1] == false)
+            {
+                MenuManager.instance.PagePopUp("Info", UnityEngine.Color.red, BetterCustomServer.language.Value == "ZH" ? "你已被踢出大厅" : "You were kicked out of lobby", "OK", true);
+            }
+            BetterCustomServer.isKicked[0] = false;
+            BetterCustomServer.isKicked[1] = false;
+        }
+
         [HarmonyTranspiler]
         [HarmonyPatch("ButtonEventHostGame")]
         public static IEnumerable<CodeInstruction> ButtonEventHostGamePatch(IEnumerable<CodeInstruction> instructions)
@@ -453,7 +461,7 @@ namespace BetterCustomServer
             {
                 if (codes[i].opcode == OpCodes.Ldc_I4_S)
                 {
-                    BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Info, "Patch HostGame: " + i.ToString());
+                    BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Info, (BetterCustomServer.language.Value == "ZH" ? "注入 HostGame：" : "Patch HostGame: ") + i.ToString());
                     codes[i].operand = 11;
                     break;
                 }
@@ -467,9 +475,9 @@ namespace BetterCustomServer
         {   //重置flag & 添加界面参数为多人游戏
             BetterCustomServer.passwordLog = false;
             BetterCustomServer.isHost = true;
-            if(!BetterCustomServer.SetAppId())   //设置服务器ID
+            if (!BetterCustomServer.SetAppId())   //设置服务器ID
             {
-                MenuManager.instance.PagePopUp("ERROR", UnityEngine.Color.red, "Server AppId not found!", "Where is your AppId?", true);
+                MenuManager.instance.PagePopUp("ERROR", UnityEngine.Color.red, BetterCustomServer.language.Value == "ZH" ? "未找到服务器 AppId" : "Server AppId not found!", BetterCustomServer.language.Value == "ZH" ? "你 AppId 呢？" : "Where is your AppId?", true);
                 return false;
             }
             SemiFunc.MainMenuSetMultiplayer();
@@ -480,9 +488,9 @@ namespace BetterCustomServer
         [HarmonyPatch("ButtonEventPlayRandom")]
         public static bool ButtonEventPlayRandomPatch()
         {   //覆写公共大厅功能
-            BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Warning, "Not support Public Game!");
+            BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Warning, BetterCustomServer.language.Value == "ZH" ? "不支持公共大厅！" : "Not support Public Game!");
             MenuManager.instance.PageCloseAll();
-            MenuManager.instance.PagePopUp("Sorry", UnityEngine.Color.yellow, "I don't make this function", "OK", true);
+            MenuManager.instance.PagePopUp("Sorry", UnityEngine.Color.yellow, BetterCustomServer.language.Value == "ZH" ? "我没做这个功能" : "I don't make this function", "OK", true);
             return false;
         }
 
@@ -504,22 +512,22 @@ namespace BetterCustomServer
                     catch
                     {
                         BetterCustomServer.inviteCode[0] = "none";
-                        BetterCustomServer.inviteCode[1] = "The InviteCode has timed out.";
-                        BetterCustomServer.inviteCode[2] = "Please recopy an InviteCode";
+                        BetterCustomServer.inviteCode[1] = BetterCustomServer.language.Value == "ZH" ? "邀请码已过期" : "The InviteCode has timed out.";
+                        BetterCustomServer.inviteCode[2] = BetterCustomServer.language.Value == "ZH" ? "请重新复制一个邀请码" : "Please recopy an InviteCode";
                     }
                 }
                 else
                 {
                     BetterCustomServer.inviteCode[0] = "none";
-                    BetterCustomServer.inviteCode[1] = "InviteCode not found.";
-                    BetterCustomServer.inviteCode[2] = "Where is your InviteCode?";
+                    BetterCustomServer.inviteCode[1] = BetterCustomServer.language.Value == "ZH" ? "未找到邀请码" : "InviteCode not found.";
+                    BetterCustomServer.inviteCode[2] = BetterCustomServer.language.Value == "ZH" ? "你码呢？" : "Where is your InviteCode?";
                 }
             }
             catch
             {
                 BetterCustomServer.inviteCode[0] = "none";
-                BetterCustomServer.inviteCode[1] = "InviteCode not found.";
-                BetterCustomServer.inviteCode[2] = "Your clipboard is empty";
+                BetterCustomServer.inviteCode[1] = BetterCustomServer.language.Value == "ZH" ? "未找到邀请码" : "InviteCode not found.";
+                BetterCustomServer.inviteCode[2] = BetterCustomServer.language.Value == "ZH" ? "你剪贴板是空的" : "Your clipboard is empty";
             }
             ulong lobbyId;
             if (BetterCustomServer.inviteCode[0] != "none" && ulong.TryParse(BetterCustomServer.inviteCode[2], out lobbyId))
@@ -536,13 +544,13 @@ namespace BetterCustomServer
                 {
                     BetterCustomServer.isChinaServer = false;
                 }
-                BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Info, "Request join Lobby: " + lobbyId.ToString());
+                BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Info, (BetterCustomServer.language.Value == "ZH" ? "请求加入大厅：" : "Request join Lobby: ") + lobbyId.ToString());
                 SteamManagerPatch.RequestGameLobbyJoin(lobbyId);
             }
             else
             {   //邀请码解密失败
-                BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Error, "Join Lobby failed!");
-                MenuManager.instance.PagePopUp("ERROR", UnityEngine.Color.red , BetterCustomServer.inviteCode[1], BetterCustomServer.inviteCode[2], true);
+                BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Error, BetterCustomServer.language.Value == "ZH" ? "加入大厅失败！" : "Join Lobby failed!");
+                MenuManager.instance.PagePopUp("ERROR", UnityEngine.Color.red, BetterCustomServer.inviteCode[1], BetterCustomServer.inviteCode[2], true);
             }
             return false;
         }
@@ -558,9 +566,47 @@ namespace BetterCustomServer
             if (!BetterCustomServer.passwordLog)
             {
                 BetterCustomServer.passwordLog = true;
-                BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Info, "Remove Lobby password");
+                BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Info, BetterCustomServer.language.Value == "ZH" ? "移除大厅密码" : "Remove Lobby password");
             }
             __instance.ConfirmButton();
+        }
+    }
+
+    [HarmonyPatch(typeof(MenuPageLobby))]
+    public class MenuPageLobbyPatch
+    {
+        [HarmonyPrefix]
+        [HarmonyPatch("ButtonLeave")]
+        public static void ButtonLeavePrefix()
+        {   //自己点的退出按钮，不判断为踢出
+            BetterCustomServer.isKicked[1] = true;
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch("ButtonInvite")]
+        public static bool ButtonInvitePatch()
+        {   //覆盖邀请按钮，为复制邀请码
+            BetterCustomServer.CopyInviteCode();
+            MenuManager.instance.PagePopUp("Info", UnityEngine.Color.blue, BetterCustomServer.language.Value == "ZH" ? "已将邀请码复制到剪贴板" : "Alread copy the InviteCode to clipboard", "OK", true);
+            return false;
+        }
+    }
+
+    [HarmonyPatch(typeof(NetworkManager))]
+    public class NetworkManagerPatch
+    {
+        [HarmonyPostfix]
+        [HarmonyPatch("BanPlayer")]
+        public static void BanPlayerPostfix(ref PlayerAvatar _playerAvatar)
+        {   //覆写踢出功能
+            RaiseEventOptions raiseEventOptions = new RaiseEventOptions
+            {
+                TargetActors = new int[]
+                {
+                    _playerAvatar.photonView.OwnerActorNr
+                }
+            };
+            PhotonNetwork.NetworkingClient.OpRaiseEvent(203, null, raiseEventOptions, SendOptions.SendReliable);
         }
     }
 
@@ -580,8 +626,8 @@ namespace BetterCustomServer
                     {
                         if (codes[i + 2].opcode == OpCodes.Stfld)
                         {
-                            BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Info, "Patch VoiceRoomTtl: " + (i + 1).ToString());
-                            codes[i + 1].operand = 0x7530;
+                            BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Info, (BetterCustomServer.language.Value == "ZH" ? "注入 VoiceRoomTtl：" : "Patch VoiceRoomTtl: ") + (i + 1).ToString());
+                            codes[i + 1].operand = 0x2710;
                             break;
                         }
                     }
@@ -600,7 +646,7 @@ namespace BetterCustomServer
                 RoomOptions = new RoomOptions
                 {
                     IsVisible = false,
-                    PlayerTtl = 30000
+                    PlayerTtl = 10000
                 },
                 RoomName = voiceRoomName
             };
@@ -614,13 +660,105 @@ namespace BetterCustomServer
             {
                 if(operationResponse.OperationCode == 226)
                 {   //换用OpRejoinRoom重新连接
-                    BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Warning, "Connect to Voice Server again");
+                    BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Warning, BetterCustomServer.language.Value == "ZH" ? "再次连接语音服务器" : "Connect to Voice Server again");
                     LoadBalancingClient loadBalancingClient = new LoadBalancingClient();
                     loadBalancingClient.OpRejoinRoom(BetterCustomServer.VoiceRoomName);
                     return false;
                 }
             }
             return true;
+        }
+    }
+
+    [HarmonyPatch(typeof(RunManager))]
+    public class RunManagerPatch
+    {
+        [HarmonyPostfix]
+        [HarmonyPatch("ChangeLevel")]
+        public static void ChangeLevelPostfix(RunManager __instance)
+        {   //判断当前场景是否可用踢出
+            if( __instance.levelCurrent == __instance.levelLobbyMenu)
+            {
+                BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Info, BetterCustomServer.language.Value == "ZH" ? "启用踢出" : "Enable kick");
+                PhotonNetwork.EnableCloseConnection = true;
+            }
+            else
+            {
+                BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Info, BetterCustomServer.language.Value == "ZH" ? "禁用踢出" : "Disable kick");
+                PhotonNetwork.EnableCloseConnection = false;
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(UnityMicrophone))]
+    public class UnityMicrophonePatch
+    {
+        [HarmonyTranspiler]
+        [HarmonyPatch("CheckDevice")]
+        public static IEnumerable<CodeInstruction> CheckDevicePatch(IEnumerable<CodeInstruction> instructions)
+        {   //去除 语音部分 Warning 日志
+            var codes = instructions.ToList();
+            for (int i = 0; i < codes.Count; i++)
+            {
+                if (codes[i].opcode == OpCodes.Ldstr)
+                {
+                    if (codes[i].operand.ToString() == "microphone does not support suggested frequency {0} (min: {1}, max: {2}). Setting to {2}")
+                    {
+                        codes[i - 2].opcode = OpCodes.Ldc_I4_4;
+                        BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Info, (BetterCustomServer.language.Value == "ZH" ? "注入 CheckDevice：" : "Patch CheckDevice: ") + (i - 2).ToString());
+                        break;
+                    }
+                }
+            }
+            return codes.AsEnumerable();
+        }
+    }
+
+    [HarmonyPatch(typeof(VoiceClient))]
+    public class VoiceClientPatch
+    {
+        [HarmonyTranspiler]
+        [HarmonyPatch("onFrame")]
+        public static IEnumerable<CodeInstruction> onFramePatch(IEnumerable<CodeInstruction> instructions)
+        {   //去除 语音部分 Warning 日志
+            var codes = instructions.ToList();
+            for (int i = 0;i < codes.Count; i++)
+            {
+                if (codes[i].opcode == OpCodes.Ldstr)
+                {
+                    if (codes[i].operand.ToString() == "[PV] Frame event for voice #")
+                    {
+                        codes[i - 1].opcode = OpCodes.Ldc_I4_4;
+                        BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Info, (BetterCustomServer.language.Value == "ZH" ? "注入 onFrame：" : "Patch onFrame: ") + (i - 1).ToString());
+                        break;
+                    }
+                }
+            }
+            return codes.AsEnumerable();
+        }
+    }
+
+    [HarmonyPatch(typeof(PhotonVoiceView))]
+    public class PhotonVoiceViewPatch
+    {
+        [HarmonyTranspiler]
+        [HarmonyPatch("Start")]
+        public static IEnumerable<CodeInstruction> StartPatch(IEnumerable<CodeInstruction> instructions)
+        {   //去除 部分语音 Warning 日志
+            var codes = instructions.ToList();
+            for (int i = 0; i < codes.Count; i++)
+            {
+                if (codes[i].opcode == OpCodes.Ldstr)
+                {
+                    if (codes[i].operand.ToString() == "PhotonVoiceView.RecorderInUse.TransmitEnabled is false, don't forget to set it to true to enable transmission.")
+                    {
+                        codes[i - 1].opcode = OpCodes.Ldc_I4_4;
+                        BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Info, (BetterCustomServer.language.Value == "ZH" ? "注入 PhotonVoiceView：" : "Patch PhotonVoiceView: ") + (i - 1).ToString());
+                        break;
+                    }
+                }
+            }
+            return codes.AsEnumerable();
         }
     }
 
@@ -657,22 +795,26 @@ namespace BetterCustomServer
         }
     }
 
-    [HarmonyPatch(typeof(ChatManager))]
-    public class ChatManagerPatch
+    [HarmonyPatch(typeof(MenuButton))]
+    public class MenuButtonPatch
     {
-        [HarmonyPrefix]
-        [HarmonyPatch("MessageSend")]
-        public static bool MessageSendPrefix(ChatManager __instance, bool _possessed)
-        {
-            if (!_possessed)
-            {
-                if (Traverse.Create(__instance).Field("chatMessage").GetValue<string>() == "/copy")
-                {
-                    BetterCustomServer.CopyInviteCode();
-                    return false;
-                }
-            }
-            return true;
+        [HarmonyFinalizer]
+        [HarmonyPatch("Update")]
+        public static Exception UpdateFinalizer()
+        {   //拦截 Update 的异常日志输出
+            return null;
         }
     }
+
+    [HarmonyPatch(typeof(PlayerCrawlTrigger))]
+    public class PlayerCrawlTriggerPatch
+    {
+        [HarmonyFinalizer]
+        [HarmonyPatch("Update")]
+        public static Exception UpdateFinalizer()
+        {   //拦截 Update 的异常日志输出
+            return null;
+        }
+    }
+
 }
