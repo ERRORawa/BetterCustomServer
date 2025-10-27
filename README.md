@@ -18,3 +18,14 @@
 2. (中国区Photon Pun) 在C盘下创建 `PhotonPunChina.txt` ，内容为 回复邮件 中提供给你的 AppId。
 3. (可选) 在C盘下创建 `PhotonVoice.txt`，内容为你的 Photon Voice 服务的 AppId。
    
+## 支持REPOConfig Mod
+
+![](config.png)
+
+## 大厅页面
+
+![](lobby.png)
+
+## 邀请码功能（错误演示）
+
+![](timeout.png)
