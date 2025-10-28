@@ -3,7 +3,7 @@ name: Bug 反馈
 about: 记得带上报错 Log
 title: ''
 labels: ''
-assignees: ''
+assignees: ERRORawa
 
 ---
 
