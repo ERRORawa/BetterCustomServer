@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using BepInEx;
 using HarmonyLib;
 using UnityEngine;
@@ -24,7 +24,7 @@ using Microsoft.SqlServer.Server;
 
 namespace BetterCustomServer
 {
-    [BepInPlugin("errorawa.repo.customserver", "BetterCustomServer", "0.2.1")]
+    [BepInPlugin("errorawa.repo.customserver", "BetterCustomServer", "0.3.0")]
     public class BetterCustomServer : BaseUnityPlugin
     {
         void Awake()
@@ -42,7 +42,7 @@ namespace BetterCustomServer
 
         void Bind()
         {
-            RegionConfig = Config.Bind<string>("Server", "Server Region", "jp", new ConfigDescription("Select server region", new AcceptableValueList<string>("asia", "au", "cae", "eu", "in", "jp", "ru", "rue", "za", "sa", "kr", "tr", "us", "usw")));
+            RegionConfig = Config.Bind<string>("Server", "Server Region", "h k", new ConfigDescription("Select server region", new AcceptableValueList<string>("a s i a", "a u", "c a e", "e u", "h k", "i n", "j p", "r u", "r u e", "z a", "s a", "k r", "t r", "u a e", "u s", "u s w", "u s s c")));
             isChinaServerConfig = Config.Bind<bool>("Server", "Use China Server", false, "If enable this option, Region will only work on Voice Server.");
             useVoice = Config.Bind<bool>("Server", "Use Voice Server", true, "If disable this option, the lobby will not support voice chat.");
             playerCount = Config.Bind<int>("Server", "Max Player Count", 8, new ConfigDescription("Change max player count.", new AcceptableValueRange<int>(2, 20)));
@@ -115,15 +115,15 @@ namespace BetterCustomServer
                 BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Info, BetterCustomServer.language.Value == "ZH" ? "已禁用语音服务器" : "Voice Server disabled.");
                 BetterCustomServer.AppIdVoice = "none";
             }
-            BetterCustomServer.Region = BetterCustomServer.RegionConfig.Value;
+            BetterCustomServer.Region = BetterCustomServer.RegionConfig.Value.Replace(" ", "");
             return true;
         }
-        public static string EncryptionECB(string encryString)
+        public static string EncryptionECB(string encryString)     //AES ECB加密
         {
             "make it your self";
         }
 
-        public static string[] DecryptionECB(string decryString)
+        public static string[] DecryptionECB(string decryString)    //AES ECB解密
         {
             "make it your self";
         }
