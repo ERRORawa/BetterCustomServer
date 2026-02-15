@@ -12,6 +12,7 @@
 
 ## 安装方法
 将Mod放置在BepInEx/plugins中。
+
 该Mod需要你去Photon Cloud创建自己的服务器ID来使用（免费）。
 ### 一、创建 Photon 服务器
 1. 前往 [Photon Engine](https://www.photonengine.com/) 注册/登录账号。
@@ -24,6 +25,7 @@
 3. `appId`中填写你的 Photon Pun 服务的 AppId。
 4. 必填项填写完毕后提交，一般等待 3-7天 将会收到回复邮件。
 5. 更改Mod配置`Use China Server`为`true`。
+
 Tip: 其实hk的延迟也挺不错的，在我这边hk比cn延迟还要低。
 
 ### 三、配置设置
