@@ -7,6 +7,9 @@ assignees: ERRORawa
 
 ---
 
+**在此之前**
+确保关闭了所有其它的mod，只保留本mod来进行测试
+
 **描述 bug**
 清晰、完整地描述 bug 内容
 
