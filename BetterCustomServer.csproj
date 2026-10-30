@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -12,6 +12,8 @@
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <SourceEncoding>utf-8</SourceEncoding>
+    <CompilerOptions>/utf8output</CompilerOptions>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -51,43 +53,58 @@
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
+  <PropertyGroup>
+    <LibPath>/Users/error/REPOCrack_lib</LibPath>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="0Harmony">
-      <HintPath>\\Mac\Home\Downloads\REPO\BepInEx\core\0Harmony.dll</HintPath>
+      <HintPath>$(LibPath)/0Harmony.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp">
-      <HintPath>\\Mac\Home\Downloads\REPO\REPO_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <HintPath>$(LibPath)/Assembly-CSharp.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="BepInEx">
-      <HintPath>\\Mac\Home\Downloads\REPO\BepInEx\core\BepInEx.dll</HintPath>
+      <HintPath>$(LibPath)/BepInEx.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="BepInEx.Harmony">
-      <HintPath>\\Mac\Home\Downloads\REPO\BepInEx\core\BepInEx.Harmony.dll</HintPath>
+      <HintPath>$(LibPath)/BepInEx.Harmony.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Facepunch.Steamworks.Win64, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>\\Mac\Home\Downloads\REPO\REPO_Data\Managed\Facepunch.Steamworks.Win64.dll</HintPath>
+      <HintPath>$(LibPath)/Facepunch.Steamworks.Win64.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Klattersynth">
-      <HintPath>\\Mac\Home\Downloads\REPO\REPO_Data\Managed\Klattersynth.dll</HintPath>
+      <HintPath>$(LibPath)/Klattersynth.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Photon3Unity3D">
-      <HintPath>\\Mac\Home\Downloads\REPO\REPO_Data\Managed\Photon3Unity3D.dll</HintPath>
+      <HintPath>$(LibPath)/Photon3Unity3D.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="PhotonRealtime">
-      <HintPath>\\Mac\Home\Downloads\REPO\REPO_Data\Managed\PhotonRealtime.dll</HintPath>
+      <HintPath>$(LibPath)/PhotonRealtime.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="PhotonUnityNetworking">
-      <HintPath>\\Mac\Home\Downloads\REPO\REPO_Data\Managed\PhotonUnityNetworking.dll</HintPath>
+      <HintPath>$(LibPath)/PhotonUnityNetworking.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="PhotonVoice">
-      <HintPath>\\Mac\Home\Downloads\REPO\REPO_Data\Managed\PhotonVoice.dll</HintPath>
+      <HintPath>$(LibPath)/PhotonVoice.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="PhotonVoice.API">
-      <HintPath>\\Mac\Home\Downloads\REPO\REPO_Data\Managed\PhotonVoice.API.dll</HintPath>
+      <HintPath>$(LibPath)/PhotonVoice.API.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="PhotonVoice.PUN">
-      <HintPath>\\Mac\Home\Downloads\REPO\REPO_Data\Managed\PhotonVoice.PUN.dll</HintPath>
+      <HintPath>$(LibPath)/PhotonVoice.PUN.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -98,14 +115,17 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine">
-      <HintPath>\\Mac\Home\Downloads\REPO\REPO_Data\Managed\UnityEngine.dll</HintPath>
+      <HintPath>$(LibPath)/UnityEngine.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>\\Mac\Home\Downloads\REPO\REPO_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>$(LibPath)/UnityEngine.CoreModule.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.IMGUIModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>\\Mac\Home\Downloads\REPO\REPO_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+      <HintPath>$(LibPath)/UnityEngine.IMGUIModule.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
