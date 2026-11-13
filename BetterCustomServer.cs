@@ -22,7 +22,7 @@ using UnityEngine;
 
 namespace BetterCustomServer
 {
-    [BepInPlugin("errorawa.repo.customserver", "BetterCustomServer", "0.5.0")]
+    [BepInPlugin("errorawa.repo.customserver", "BetterCustomServer", "0.5.1")]
     public class BetterCustomServer : BaseUnityPlugin
     {
         void Awake()
@@ -380,15 +380,6 @@ namespace BetterCustomServer
             }
             return false;
         }
-
-        [HarmonyPrefix]
-        [HarmonyPatch("SteamLobbyVersionCheck")]
-        public static bool SteamLobbyVersionCheckPatch(ref bool __result)
-        {   //去除版本检查
-            BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Info, BetterCustomServer.language.Value == "ZH" ? "跳过版本检查" : "Skip Version Check");
-            __result = true;
-            return false;
-        }
     }
 
     [HarmonyPatch(typeof(LoadBalancingClient))]
@@ -403,6 +394,10 @@ namespace BetterCustomServer
                 BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Info, BetterCustomServer.language.Value == "ZH" ? "设置Voice连接区域：" : "Set Voice Connect Region: " + BetterCustomServer.Region);
                 appSettings.FixedRegion = BetterCustomServer.Region;
                 appSettings.Server = "ns.photonengine.io";
+                PhotonNetwork.AuthValues = new AuthenticationValues
+                {
+                    AuthType = CustomAuthenticationType.None
+                };
             }
         }
 
@@ -439,16 +434,12 @@ namespace BetterCustomServer
     [HarmonyPatch(typeof(PlatformManager))]
     public class PlatformManagerPatch
     {
-        [HarmonyPrefix]
+        [HarmonyPostfix]
         [HarmonyPatch("SetPhotonAuthTicket")]
-        public static bool SendSteamAuthTicketPatch()
-        {   //防止认证类型被更改为Steam（语音服务会无法连接）
+        public static void SetPhotonAuthTicketPostfix()
+        {
             BetterCustomServer.Logger(BepInEx.Logging.LogLevel.Info, BetterCustomServer.language.Value == "ZH" ? "移除Photon认证" : "Remove Photon Auth");
-            PhotonNetwork.AuthValues = new AuthenticationValues
-            {
-                AuthType = CustomAuthenticationType.None
-            };
-            return false;
+            PhotonNetwork.AuthValues.AuthType = CustomAuthenticationType.None;
         }
     }
 
